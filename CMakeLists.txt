@@ -71,7 +71,9 @@ SET(CALIBRATION_CPP	CALIBRATION/hybrid_essential.cpp	CALIBRATION/hybrid_essentia
 			CALIBRATION/scale_uniformization.cpp	CALIBRATION/scale_uniformization.hpp
 			CALIBRATION/miscellaneous.hpp)
 			
-SET(MATCHING_CPP	MATCHING/line_matching.cpp	MATCHING/line_matching.hpp)
+SET(LINE_MATCHING_CPP	MATCHING/line_matching.cpp	MATCHING/line_matching.hpp)
+
+SET(POINT_MATCHING_CPP	MATCHING/point_matching.cpp	MATCHING/point_matching.hpp)
 			
 SET(INTERFACE 		interface.cpp			interface.hpp)
 
@@ -91,7 +93,7 @@ ADD_EXECUTABLE(LSD_MULTISCALE ${LINE_DETECTION}
 TARGET_LINK_LIBRARIES(LSD_MULTISCALE ${OpenCV_LIBS})
 
 # LINE MATCHING
-ADD_EXECUTABLE(LINE_MATCHING ${MATCHING_CPP}
+ADD_EXECUTABLE(LINE_MATCHING ${LINE_MATCHING_CPP}
                              ${LINE_DETECTION}
                              ${INTERFACE}
                              ${THIRD_PARTY}
@@ -99,9 +101,19 @@ ADD_EXECUTABLE(LINE_MATCHING ${MATCHING_CPP}
 
 TARGET_LINK_LIBRARIES(LINE_MATCHING ${LIBS} ${OpenCV_LIBS} ${MATCHING_LIBS})
 
+# POINT MATCHING
+ADD_EXECUTABLE(POINT_MATCHING ${POINT_MATCHING_CPP}
+                             #${LINE_DETECTION}
+                             ${INTERFACE}
+                             ${THIRD_PARTY}
+                             main_point_matching.cpp)
+
+TARGET_LINK_LIBRARIES(POINT_MATCHING ${LIBS} ${OpenCV_LIBS} ${MATCHING_LIBS})
+
+
 # ED-LINE MATCHING
 ADD_EXECUTABLE(EDLINE_MATCHING  ${EDLINES_DETECTION}
-				${MATCHING_CPP}
+				${LINE_MATCHING_CPP}
 				${INTERFACE}
 				${THIRD_PARTY}
 				main_edline_matching.cpp)
@@ -126,7 +138,7 @@ TARGET_LINK_LIBRARIES(CALIBRATION ${OpenCV_LIBS} ${CERES_LIBRARIES})
 
 # RECONSTRUCTION
 ADD_EXECUTABLE(RECONSTRUCTION ${CALIBRATION_CPP}
-			      ${MATCHING_CPP}
+			      ${LINE_MATCHING_CPP}
 			      ${LINE_DETECTION}
 			      ${INTERFACE}
 			      ${THIRD_PARTY}
